@@ -119,7 +119,8 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 .mypy_cache/
- @andresshare
+.vscode 
+@andresshare
   
             
  
