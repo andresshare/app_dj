@@ -4,10 +4,10 @@ from django.test import TestCase
 from .views import home, board_topics, new_topic
 from .models import Board, Topic, Post
 from django.contrib.auth.models import User
-from .views import new_topic
 from .forms import NewTopicForm
-
 from .views import signup
+
+
 
 
 class HomeTests(TestCase):
@@ -109,14 +109,17 @@ class NewTopicTests(TestCase):
         self.assertTrue(Topic.objects.exists())
         self.assertTrue(Post.objects.exists())
 
-    def test_new_topic_invalid_post_data(self):
+    def test_new_topic_invalid_post_data(self):  # <- updated this one
         '''
         Invalid post data should not redirect
         The expected behavior is to show the form again with validation errors
         '''
         url = reverse('new_topic', kwargs={'pk': 1})
         response = self.client.post(url, {})
+        form = response.context.get('form')
         self.assertEquals(response.status_code, 200)
+        self.assertTrue(form.errors)
+
 
     def test_new_topic_invalid_post_data_empty_fields(self):
         '''
@@ -140,24 +143,14 @@ class NewTopicTests(TestCase):
         form = response.context.get('form')
         self.assertIsInstance(form, NewTopicForm)
 
-    def test_new_topic_invalid_post_data(self):  # <- updated this one
-        '''
-        Invalid post data should not redirect
-        The expected behavior is to show the form again with validation errors
-        '''
-        url = reverse('new_topic', kwargs={'pk': 1})
-        response = self.client.post(url, {})
-        form = response.context.get('form')
-        self.assertEquals(response.status_code, 200)
-        self.assertTrue(form.errors)
-
 
 class SignUpTests(TestCase):
     def test_signup_status_code(self):
         url = reverse('signup')
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEquals(response.status_code, 200)
 
-    def test_signup_url_resolves_signup_view(self):
-        view = resolve('/signup/')
-        self.assertEqual(view.func, signup)
+    # def test_signup_url_resolves_signup_view(self):
+    #     view = resolve('/signup/')
+    #     self.assertEquals(view.func, signup)
+

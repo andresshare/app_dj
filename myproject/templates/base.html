@@ -12,18 +12,21 @@
 
 <body>
 
+     {% block body %}
+    <!-- HERE -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">Django Boards</a>
         </div>
     </nav>
-
     <div class="container">
         <ol class="breadcrumb my-4">
             {% block breadcrumb %} {% endblock %}
         </ol>
         {% block content %} {% endblock %}
     </div>
+    {% endblock body %}
+    <!-- AND HERE -->
 </body>
 
 </html>
