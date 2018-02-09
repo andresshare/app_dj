@@ -7,10 +7,7 @@ from django.contrib.auth.models import User
 from .views import new_topic
 from .forms import NewTopicForm
 
-
-
-
-
+from .views import signup
 
 
 class HomeTests(TestCase):
@@ -155,4 +152,12 @@ class NewTopicTests(TestCase):
         self.assertTrue(form.errors)
 
 
+class SignUpTests(TestCase):
+    def test_signup_status_code(self):
+        url = reverse('signup')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
+    def test_signup_url_resolves_signup_view(self):
+        view = resolve('/signup/')
+        self.assertEqual(view.func, signup)
