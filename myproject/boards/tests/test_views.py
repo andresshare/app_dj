@@ -1,12 +1,10 @@
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
-from .views import home, board_topics, new_topic
-from .models import Board, Topic, Post
+from ..views import home, board_topics, new_topic
+from ..models import Board, Topic, Post
 from django.contrib.auth.models import User
-from .forms import NewTopicForm
-from .views import signup
-
+from ..forms import NewTopicForm
 
 
 
@@ -93,21 +91,20 @@ class NewTopicTests(TestCase):
         response = self.client.get(new_topic_url)
         self.assertContains(response, 'href="{0}"'.format(board_topics_url))
 
-
     def test_csrf(self):
             url = reverse('new_topic', kwargs={'pk': 1})
             response = self.client.get(url)
             self.assertContains(response, 'csrfmiddlewaretoken')
 
     def test_new_topic_valid_post_data(self):
-        url = reverse('new_topic', kwargs={'pk': 1})
-        data = {
-            'subject': 'Test title',
-            'message': 'Lorem ipsum dolor sit amet'
-        }
-        response = self.client.post(url, data)
-        self.assertTrue(Topic.objects.exists())
-        self.assertTrue(Post.objects.exists())
+            url = reverse('new_topic', kwargs={'pk': 1})
+            data = {
+                'subject': 'Test title',
+                'message': 'Lorem ipsum dolor sit amet'
+            }
+            response = self.client.post(url, data)
+            self.assertTrue(Topic.objects.exists())
+            self.assertTrue(Post.objects.exists())
 
     def test_new_topic_invalid_post_data(self):  # <- updated this one
         '''
@@ -119,7 +116,6 @@ class NewTopicTests(TestCase):
         form = response.context.get('form')
         self.assertEquals(response.status_code, 200)
         self.assertTrue(form.errors)
-
 
     def test_new_topic_invalid_post_data_empty_fields(self):
         '''
@@ -136,21 +132,8 @@ class NewTopicTests(TestCase):
         self.assertFalse(Topic.objects.exists())
         self.assertFalse(Post.objects.exists())
 
-
     def test_contains_form(self):  # <- new test
         url = reverse('new_topic', kwargs={'pk': 1})
         response = self.client.get(url)
         form = response.context.get('form')
         self.assertIsInstance(form, NewTopicForm)
-
-
-class SignUpTests(TestCase):
-    def test_signup_status_code(self):
-        url = reverse('signup')
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-
-    # def test_signup_url_resolves_signup_view(self):
-    #     view = resolve('/signup/')
-    #     self.assertEquals(view.func, signup)
-

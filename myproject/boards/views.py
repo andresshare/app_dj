@@ -2,12 +2,9 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
-from .forms import NewTopicForm
+from .forms import NewTopicForm 
 from .models import Board, Topic, Post
-
-
-
-
+from django.contrib.auth.models import User
 
 
 def home(request):
@@ -45,6 +42,4 @@ def new_topic(request, pk):
     return render(request, 'new_topic.html', {'board': board, 'form': form})
 
 
-def signup(request):
-    form = UserCreationForm()
-    return render(request, 'signup.html', {'form': form})
+
